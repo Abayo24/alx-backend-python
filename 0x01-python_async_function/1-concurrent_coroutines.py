@@ -12,5 +12,5 @@ wait_random = module.wait_random
 
 
 async def wait_n(n: int, max_delay: int) -> list:
-    result = await asyncio.gather(*(wait_random(max_delay) for _ in range(n)))
+    result = [await wait_random(max_delay) for _ in range(n)]
     return result
