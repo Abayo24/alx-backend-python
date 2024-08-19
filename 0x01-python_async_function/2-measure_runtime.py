@@ -18,5 +18,5 @@ async def measure_time_async(n: int, max_delay: int) -> float:
 
 
 def measure_time(n: int, max_delay: int) -> float:
-    """"""
+    """measure_time function runs the coroutine"""
     return asyncio.run(measure_time_async(n, max_delay))
