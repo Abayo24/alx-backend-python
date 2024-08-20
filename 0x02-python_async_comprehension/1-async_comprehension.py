@@ -15,4 +15,4 @@ async def async_comprehension() -> List[float]:
     comprehensing over async_generator
     """
     random_num = [i async for i in async_generator()]
-    print(random_num)
+    return random_num
