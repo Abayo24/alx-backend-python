@@ -73,7 +73,7 @@ class TestMemoize(unittest.TestCase):
         (42,),
         (100,),
     ])
-    @patch.object(TestClass, 'a_method,', return_value=42)
+    @patch.object(TestClass, 'a_method')
     def test_memoize(self, return_value, mock_a_method):
         """tests that memoize is called once"""
         mock_a_method.return_value = return_value
