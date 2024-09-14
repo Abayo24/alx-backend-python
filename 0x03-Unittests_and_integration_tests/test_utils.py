@@ -59,30 +59,33 @@ class TestGetJson(unittest.TestCase):
 
 
 class TestMemoize(unittest.TestCase):
-    """gvw jweygd jeygdi jhd"""
+    """Tests Memoize method"""
+
     @parameterized.expand([
-        (42, 42),
-        (21, 21),
-        (13, 13),
+        (42,),
+
     ])
-    def test_memoize(self, expected_result, return_value):
-        """yegfey erufoeu oeurfhu ker"""
+    def test_memoize(self, return_value):
+        """tests that memoize is called once"""
         class TestClass:
             def a_method(self):
-                return return_value
+                return 42
 
             @memoize
             def a_property(self):
                 return self.a_method()
 
-        test_instance = TestClass()
-        with patch.object(test_instance, 'a_method', return_value=return_value) as mock_a_method:
-            result1 = test_instance.a_property
-            result2 = test_instance.a_property
-            
-            self.assertEqual(result1, expected_result)
-            self.assertEqual(result2, expected_result)
+        with patch.object(TestClass, 'a_method',
+                          return_value=return_value) as mock_a_method:
+            test = TestClass()
+
+            result1 = test.a_property
+            result2 = test.a_property
+
             mock_a_method.assert_called_once()
+
+            self.assertEqual(result1, return_value)
+            self.assertEqual(result2, return_value)
 
 
 if __name__ == '__main__':
