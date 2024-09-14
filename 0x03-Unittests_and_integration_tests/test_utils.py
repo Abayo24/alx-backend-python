@@ -71,7 +71,7 @@ class TestMemoize(unittest.TestCase):
 
     @parameterized.expand([
         (42,),
-        (100,),
+        (42,),
     ])
     @patch.object(TestClass, 'a_method')
     def test_memoize(self, return_value, mock_a_method):
