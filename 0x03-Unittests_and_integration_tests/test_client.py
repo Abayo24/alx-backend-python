@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """TestGithubOrgClient class to test GithubOrgClient methods"""
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, PropertyMock
 from parameterized import parameterized
 from client import GithubOrgClient
 from utils import get_json
@@ -28,7 +28,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
         self.assertEqual(result, expected_response)
 
-    @patch('client.GithubOrgClient.org', new_callable=property)
+    @patch('client.GithubOrgClient.org', new_callable=PropertyMock)
     def test_public_repos_url(self, mock_org):
         """Test that _public_repos_url returns the
         correct URL based on the org payload"""
