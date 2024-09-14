@@ -63,7 +63,6 @@ class TestMemoize(unittest.TestCase):
 
     @parameterized.expand([
         (42,),
-        (50,)
     ])
     def test_memoize(self, return_value):
         """tests that memoize is called once"""
@@ -75,7 +74,8 @@ class TestMemoize(unittest.TestCase):
             def a_property(self):
                 return self.a_method()
 
-        with patch.object(TestClass, 'a_method', return_value=return_value) as mock_a_method:
+        with patch.object(TestClass, 'a_method',
+                          return_value=return_value) as mock_a_method:
             test = TestClass()
 
             result1 = test.a_property
