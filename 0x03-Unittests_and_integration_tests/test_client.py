@@ -32,7 +32,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
         self.assertEqual(result, expected_response)
 
-    def test_public_repos_url(self):
+    def test_public_repos_url(self) -> None:
         """Test that _public_repos_url returns the
         correct URL based on the org payload"""
 
@@ -48,7 +48,7 @@ class TestGithubOrgClient(unittest.TestCase):
             client = GithubOrgClient("google")
 
             # Access _public_repos_url
-            result = client._public_repos_url
+            result: str = client._public_repos_url
 
             # Assert that the result matches the expected URL
             self.assertEqual(result,
