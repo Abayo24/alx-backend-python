@@ -6,6 +6,7 @@ from unittest.mock import patch, PropertyMock, MagicMock
 from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
 from typing import Dict, List
+
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 
 
@@ -155,3 +156,15 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         self.mock_get.assert_not_called_with(
             "https://api.github.com/orgs/apache2/repos"
             )
+
+    def test_public_repos_with_license(self) -> None:
+        """Test the public_repos method with license filtering"""
+        client = GithubOrgClient("google")
+
+        result: List[str] = client.public_repos(license="apache-2.0")
+
+        self.assertEqual(result, self.apache2_repos)
+
+        self.mock_get.assert_any_call("https://api.github.com/orgs/google")
+        self.mock_get.assert_any_call("https://api.github.com/orgs/google/repos")
+        self.mock_get.assert_not_called_with("https://api.github.com/orgs/apache2/repos")
