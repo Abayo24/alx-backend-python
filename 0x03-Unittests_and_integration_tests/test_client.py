@@ -52,7 +52,7 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_org.assert_called_once()
 
     @patch('client.get_json')
-    def test_public_repos(self, mock_get_json, MagicMock) -> None:
+    def test_public_repos(self, mock_get_json: MagicMock) -> None:
         """
         Test that GithubOrgClient.public_repos
         returns the expected repos
