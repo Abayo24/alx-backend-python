@@ -165,6 +165,12 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
         self.assertEqual(result, self.apache2_repos)
 
-        self.mock_get.assert_any_call("https://api.github.com/orgs/google")
-        self.mock_get.assert_any_call("https://api.github.com/orgs/google/repos")
-        self.mock_get.assert_not_called_with("https://api.github.com/orgs/apache2/repos")
+        self.mock_get.assert_any_call(
+            "https://api.github.com/orgs/google"
+            )
+        self.mock_get.assert_any_call(
+            "https://api.github.com/orgs/google/repos"
+            )
+        self.mock_get.assert_not_called_with(
+            "https://api.github.com/orgs/apache2/repos"
+            )
