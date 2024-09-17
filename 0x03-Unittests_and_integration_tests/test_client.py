@@ -3,9 +3,10 @@
 
 import unittest
 from unittest.mock import patch, PropertyMock, MagicMock
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
 from typing import Dict, List
+from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -100,3 +101,57 @@ class TestGithubOrgClient(unittest.TestCase):
         """
         result = GithubOrgClient.has_license(repo, license_key)
         self.assertEqual(result, expected)
+
+
+@parameterized_class([
+    {'org_payload': org_payload,
+     'repos_payload': repos_payload,
+     'expected_repos': expected_repos,
+     'apache2_repos': apache2_repos},
+])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Integration tests for GithubOrgClient"""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        """Set up the test class"""
+        cls.get_patcher = patch('requests.get')
+        cls.mock_get = cls.get_patcher.start()
+
+        def mock_get_side_effect(url: str) -> MagicMock:
+            """mock get side effect"""
+            mock_response = MagicMock()
+            if "orgs/google" in url:
+                mock_response.json.return_value = cls.org_payload
+            elif "orgs/google/repos" in url:
+                mock_response.json.return_value = cls.repos_payload
+            elif "orgs/apache2/repos" in url:
+                mock_response.json.return_value = cls.apache2_repos
+            else:
+                mock_response.json.return_value = {}
+            return mock_response
+
+        cls.mock_get.side_effect = mock_get_side_effect
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        """Tear down the test class"""
+        cls.get_patcher.stop()
+
+    def test_public_repos(self) -> None:
+        """Test the public_repos method"""
+        client = GithubOrgClient("google")
+
+        result: List[str] = client.public_repos()
+
+        self.assertEqual(result, self.expected_repos)
+
+        self.mock_get.assert_any_call(
+            "https://api.github.com/orgs/google"
+            )
+        self.mock_get.assert_any_call(
+            "https://api.github.com/orgs/google/repos"
+            )
+        self.mock_get.assert_not_called_with(
+            "https://api.github.com/orgs/apache2/repos"
+            )
