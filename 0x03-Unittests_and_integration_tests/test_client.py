@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """TestGithubOrgClient class to test GithubOrgClient methods"""
+
 import unittest
 from unittest.mock import patch, PropertyMock, MagicMock
 from parameterized import parameterized
@@ -31,17 +32,27 @@ class TestGithubOrgClient(unittest.TestCase):
 
         self.assertEqual(result, expected_response)
 
-    @patch('client.GithubOrgClient.org', new_callable=PropertyMock)
-    def test_public_repos_url(self, mock_org: PropertyMock) -> None:
+    def test_public_repos_url(self):
         """Test that _public_repos_url returns the
         correct URL based on the org payload"""
 
-        mock_org.return_value = {
-            "repos_url": "https://api.github.com/orgs/google/repos"
-        }
+        # Use patch to mock the 'org' property
+        with patch('client.GithubOrgClient.org',
+                   new_callable=PropertyMock) as mock_org:
+            # Return a known payload for the org
+            mock_org.return_value = {
+                "repos_url": "https://api.github.com/orgs/google/repos"
+            }
 
-        client = GithubOrgClient("google")
+            # Initialize the client
+            client = GithubOrgClient("google")
 
-        result = client._public_repos_url
+            # Access _public_repos_url
+            result = client._public_repos_url
 
-        self.assertEqual(result, "https://api.github.com/orgs/google/repos")
+            # Assert that the result matches the expected URL
+            self.assertEqual(result,
+                             "https://api.github.com/orgs/google/repos")
+
+        # Ensure the org property was called exactly once
+        mock_org.assert_called_once()
