@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import patch, PropertyMock, MagicMock
 from parameterized import parameterized
 from client import GithubOrgClient
-from typing import Dict, Tuple, Any
+from typing import Dict
 
 
 class TestGithubOrgClient(unittest.TestCase):
